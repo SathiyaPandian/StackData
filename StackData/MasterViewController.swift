@@ -110,11 +110,21 @@ class MasterViewController: UITableViewController {
         var image: UIImage?
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            image =  UIImage(data: NSData(contentsOfURL: NSURL(string:urlString)!)!)
+            
+            if let myImageData = NSData(contentsOfURL: NSURL(string:urlString)!) {
+               image =  UIImage(data: myImageData)
+            } else {
+                print("No Data")
+            }
+            
             dispatch_async(dispatch_get_main_queue()) {
-                let cell = self.tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+                 if image != nil {
+                let cell = self.tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
                 cell.imageView?.image = image
                 self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+                 } else {
+                    print("No Image")
+                }
             }
         }
     }
